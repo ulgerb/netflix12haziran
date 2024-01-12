@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block head %}
+<style>
+    h2 {
+        text-align: left;
+        font-weight: bold;
+    }
+
+    .hero-image {
+        height: 100%;
+    }
+
+    .hero-text {
+        background-color: rgba(0, 0, 0, 0.700);
+        width: 500px;
+        top: 50%;
+    }
+
+    .hero-text2 {
+        width: 75%;
+        margin: auto;
+    }
+
+    .form-control {
+        background-color: rgb(34, 34, 34);
+        border: none;
+    }
+
+    .p-grey {
+        color: grey;
+    }
+
+    .con-footer {
+        position: absolute;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.700);
+    }
+
+    @media screen and (max-width: 700px) {
+        .hero-image {
+            background-image: linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 1)), url(img/arkaplan.jpg);
+        }
+    }
+</style>
+{% endblock head %}
+    
+
+{% block body %}
+<div class="hero-image">
+    <!-- navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="navbar-brand"><img src="{% static 'img/netflix_logo.png' %}" alt=""></a>
+        </div>
+    </nav>
+
+    <div class="hero-text">
+        <!-- form -->
+        <form method="POST" class="hero-text2 mt-5 mb-5">
+            {% csrf_token %}
+            <h2>Kaydol</h2>
+
+            <div class="mb-3">
+                <input required type="text" name="fname" class="form-control form-control-lg my-2" placeholder="Ad">
+                <input required type="text" name="lname" class="form-control form-control-lg my-2" placeholder="Soyad">
+                <input required type="text" name="email" class="form-control form-control-lg my-2" placeholder="Email">
+                <input required type="text" name="username" class="form-control form-control-lg my-2" placeholder="Kullanıcı Adı">
+                <input required type="password" name="password1" class="form-control form-control-lg my-2" placeholder="Şifre">
+                <input required type="password" name="password2" class="form-control form-control-lg my-2" placeholder="Tekrar Şifre">
+            </div>
+            <div class="d-grid gap-2">
+                <button class="btn btn-danger btn-lg" type="submit">Kayıt Ol</button>
+            </div>
+
+            <div class="form-check text-start my-3">
+                <input type="checkbox" required name="check-site" id="check-site" class="form-check-input">
+                <label for="check-site" class="form-check-label">
+                    Site kullanım kurallarını okudum onaylıyorum.
+                </label><br>
+                <input type="checkbox" required name="check-kvkk" id="check-kvkk" class="form-check-input">
+                <label for="check-kvkk" class="form-check-label">
+                    Site içi kvkk kurallarını okudum onaylıyorum.
+                </label>
+            </div>
+
+            <p class="p-grey">
+                Zaten bir hesabım var. <a href="{% url 'loginPage' %}">Giriş yap</a> <br><br>
+            </p>
+        </form>
+    </div>
+
+</div>
+{% endblock body %}
+    
+    
+    
+
+   

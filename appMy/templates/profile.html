@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block head %}
+<style>
+    .card img:hover {
+        border: 4px solid white;
+    }
+    
+    button:hover {
+        border: 1px solid white;
+        color: white !important;
+    }
+    .upgrade{
+        width: 100% !important;
+        height: 100% !important;
+        background-color: #000;
+        opacity: .8;
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+    }
+</style>
+{% endblock head %}
+    
+
+
+{% block body %}
+<nav class="navbar">
+    <div class="container">
+        <a href="" class="navbar-brand">
+            <img src="{% static 'img/netflix_logo.png' %}" alt="">
+        </a>
+    </div>
+</nav>
+
+<!-- profil seçimi -->
+<div class="container">
+    <div class="row w-75 m-auto bg-black bg-opacity-25">
+        <h1 class="text-center text-light">Kimler İzliyor?</h1>
+
+        
+        {% for i in profile_list %}
+            <div class="col-3 mt-5 mb-5">
+                <div class=" text-decoration-none text-secondary">
+                    <div class="card bg-transparent position-relative">
+                        <div class="upgrade d-none">
+                            <i class="text-black btn btn-light bi bi-pencil-square" data-bs-toggle="modal" data-bs-target="#profiledelete{{ i.id }}"></i>
+                            <a href="{% url 'profileDelete' i.id %}"><i class="text-black btn btn-light bi bi-x-square"></i></a>
+                        </div>
+                            <!-- <a href="{% url 'browsePage' i.id %}"><img src="{{ i.image.url }}" class="card-img-top w-100" style="height: 186px; object-fit: cover;" alt=""></a> -->
+                            <a href="{% url 'profileBrowse' i.id %}"><img src="{{ i.image.url }}" class="card-img-top w-100" style="height: 186px; object-fit: cover;" alt=""></a>
+                        <div>
+                            <h5 class="card-title text-center text-secondary">{{ i.title }}</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="profiledelete{{ i.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">{{ i.title }} Profilini Düzenle</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <input type="hidden" name="profileid" value="{{ i.id }}">
+                                <input type="text" class="form-control my-2" name="title" value="{{ i.title }}" placeholder="Profil Adı" id="">
+                                <input type="file" class="form-control my-2" name="image" id="">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                                <button type="submit" value="profileDelete" name="submit" class="btn btn-primary">Güncelle</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        
+        
+        {% if profile_list|length < 4 %}
+            <!-- Profil Ekleme -->
+            <div class="col-3 mt-5 mb-5">
+
+                <a href="browse-index.html" class="text-decoration-none text-secondary" data-bs-toggle="modal" data-bs-target="#profile-create">
+                    <div class="card bg-transparent">
+                        <div class="w-100 h-100 text-center text-secondary" style="font-size: 9rem;">+</div>
+                    </div>
+                </a>
+                
+                <!-- Modal -->
+                <div class="modal fade" id="profile-create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Profil Oluştur</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="modal-body">
+                                    <input type="text" class="form-control my-2" name="title" placeholder="Profil Adı" id="">
+                                    <input type="file" class="form-control my-2" name="image" id="">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                                    <button type="submit" value="profileCreate" name="submit" class="btn btn-primary">Oluştur</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+            
+
+
+
+        <div class="buton mb-5 text-center">
+            <button class="bg-dark text-secondary w-50 p-2 pbtn">Profil Yönetimi</button>
+        </div>
+    </div>
+</div>
+{% endblock body %}
+    
+    
+
+
+{% block js %}
+<script>
+    let pbtn = document.querySelector(".pbtn") 
+    let upgrade_list = document.querySelectorAll(".upgrade") 
+    pbtn.addEventListener("click", ()=>{
+        upgrade_list.forEach(e=>{
+            e.classList.toggle("d-none")
+        })
+    })
+    
+</script>
+{% endblock js %}
+        
+
+
+    
+
+
+
+
+
