@@ -9,7 +9,7 @@ input{
 }
 /* Hero image */
 .hero-image {
-    background-image: linear-gradient(rgb(0, 0, 0, 0.6), rgb(0, 0, 0, 0.6)), url(img/arkaplan.jpg);
+    background-image: linear-gradient(rgb(0, 0, 0, 0.6), rgb(0, 0, 0, 0.6)), url(../img/arkaplan.jpg);
     height: 100%;
     background-position: center;
     background-repeat: no-repeat;

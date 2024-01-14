@@ -3,7 +3,7 @@
 
     
 
-{% block body %}
+{% block nonheader %}
 <main>
     <!-- Hero image -->
     <div class="hero-image" style="height: 700px;">
@@ -22,7 +22,7 @@
                         <li><a href="" class="dropdown-item">İngilizce</a></li>
                     </ul>
                     </div>
-                    <a href="" class="btn btn-danger mx-3" role="button">Oturum Aç</a>
+                    <a href="{% url 'loginPage' %}" class="btn btn-danger mx-3" role="button">Oturum Aç</a>
                 </form>
             </div>
         </nav>
@@ -182,6 +182,6 @@
         </div>
     </div>
 </main>
-{% endblock body %}
+{% endblock nonheader %}
     
     

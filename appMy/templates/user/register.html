@@ -49,7 +49,7 @@
 {% endblock head %}
     
 
-{% block body %}
+{% block nonheader %}
 <div class="hero-image">
     <!-- navbar -->
     <nav class="navbar">
@@ -65,10 +65,10 @@
             <h2>Kaydol</h2>
 
             <div class="mb-3">
-                <input required type="text" name="fname" class="form-control form-control-lg my-2" placeholder="Ad">
-                <input required type="text" name="lname" class="form-control form-control-lg my-2" placeholder="Soyad">
-                <input required type="text" name="email" class="form-control form-control-lg my-2" placeholder="Email">
-                <input required type="text" name="username" class="form-control form-control-lg my-2" placeholder="Kullanıcı Adı">
+                <input value="{{ fname }}" type="text" name="fname" class="{% if not fname %} border border-3 border-danger {% endif %} form-control form-control-lg my-2" placeholder="Ad">
+                <input value="{{ lname }}" type="text" name="lname" class="{% if not lname %} border border-3 border-danger {% endif %} form-control form-control-lg my-2" placeholder="Soyad">
+                <input value="{{ email }}" type="text" name="email" class="{% if not email %} border border-3 border-danger {% endif %} form-control form-control-lg my-2" placeholder="Email">
+                <input value="{{ username }}" type="text" name="username" class="{% if not username %} border border-3 border-danger {% endif %} form-control form-control-lg my-2" placeholder="Kullanıcı Adı">
                 <input required type="password" name="password1" class="form-control form-control-lg my-2" placeholder="Şifre">
                 <input required type="password" name="password2" class="form-control form-control-lg my-2" placeholder="Tekrar Şifre">
             </div>
@@ -94,7 +94,7 @@
     </div>
 
 </div>
-{% endblock body %}
+{% endblock nonheader %}
     
     
     
