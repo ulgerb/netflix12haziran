@@ -2,11 +2,84 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.contrib import messages
+from appUser.models import *
 
 def profilePage(request):
    context = {}
-   return render(request, "profile.html", context)
    
+   profile_list = Profile.objects.filter(user=request.user, isview=True)
+   profile_delete_list = Profile.objects.filter(user=request.user, isview=False)
+   # olan profile adı varsa ve silinmişse tekrar eski profilini getirmek istemisin yoksa yenisimi oluşsun
+   if request.method == "POST":
+      submit = request.POST.get("submit")
+      title = request.POST.get("title")
+      image = request.FILES.get("image")
+      
+      if submit == "profileCreate": 
+         if len(profile_list) < 4:
+            if title and image:
+               if profile_delete_list.filter(title=title).exists(): # Silinen Profil olup olmadığını tespit et
+                  context.update({"is_delete_title":True ,"title":title, "image":image})
+                  profile = Profile(title=title, image=image, user=request.user,isview=False, isnew=True) # aynı isme sahip yeni profil
+                  profile.save()
+               else:
+                  profile = Profile(title=title, image=image, user=request.user)
+                  profile.save()
+                  return redirect("profilePage")
+            else:
+               messages.warning(request, "Boş bırakılan yerler var")
+      elif submit == "newProfileCreate":
+         profildelete = profile_delete_list.get(title=title, isnew=False) # aynı isme sahip eski profil
+         profildelete.delete()
+         profile = Profile.objects.get(user=request.user, isnew=True) # yeni oluşturduğumuz profili getir
+         profile.isnew = False
+         profile.isview = True
+         profile.save()
+         return redirect("profilePage")
+
+      elif submit == "oldProfileCreate":
+         profil = Profile.objects.get(title=title, isnew=True)
+         profil.delete()
+         profildelete = profile_delete_list.get(title=title, isnew=False)
+         profildelete.isview = True
+         profildelete.save()
+         return redirect("profilePage")
+      
+      elif submit == "profileUpdate":
+         
+         profileid = request.POST.get("profileid")
+         profile = Profile.objects.get(user=request.user, id=profileid)
+         if title:
+            profile.title = title
+         if image:
+            profile.image = image
+         profile.save()
+         return redirect("profilePage")         
+         
+         
+         
+   context.update({
+      "profile_list":profile_list,
+   })
+   return render(request, "profile.html", context)
+
+def profileDelete(request, pid):
+   profile = Profile.objects.get(user=request.user,id=pid)
+   profile.isview = False
+   profile.save()
+   return redirect("profilePage")
+
+def profileLogin(request,pid):
+   profile_list = Profile.objects.filter(user=request.user) # kullanının tüm profilleri
+   profile_list.update(islogin=False) # tüm listedeki islogin False olsun
+   
+   profile = Profile.objects.get(user=request.user, id=pid) # tıklanan profile
+   profile.islogin = True # girişli olarak ayarla
+   profile.save() # kaydet
+   return redirect("browseindexPage")
+
+# ============ 
+
 def hesapPage(request):
    context = {}
    return render(request, "hesap.html", context)

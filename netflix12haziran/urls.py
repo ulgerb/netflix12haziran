@@ -26,6 +26,10 @@ urlpatterns = [
     path('', indexPage, name='indexPage'),
     path('netflix', browseindexPage, name='browseindexPage'),
     path('profile', profilePage, name='profilePage'),
+    path('profileDelete/<pid>', profileDelete, name='profileDelete'),
+    path('profileLogin/<pid>', profileLogin, name='profileLogin'),
+    
+    
     path('hesap', hesapPage, name='hesapPage'),
     path('login', loginPage, name='loginPage'),
     path('signup', registerPage, name='registerPage'),

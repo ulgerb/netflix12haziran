@@ -34,7 +34,7 @@
             <li class="nav-item dropdown" style="margin-right: 100px;">
                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
                   data-bs-toggle="dropdown" aria-expanded="false">
-                  <img src="{% static 'img/smile-profil.png' %}" style="width: 40px; height: 40px; object-fit: cover;"
+                  <img src="{{ profile.image.url }}" style="width: 40px; height: 40px; object-fit: cover;"
                      alt="">
                </a>
                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -42,7 +42,7 @@
                   <li>
                      <hr class="dropdown-divider">
                   </li>
-                  <li><a class="dropdown-item" href="">Hesap</a></li>
+                  <li><a class="dropdown-item" href="{% url 'hesapPage' %}">Hesap</a></li>
                   <li><a class="dropdown-item" href="#">Yardım Merkezi</a></li>
                   <li><a class="dropdown-item" href="">Netflix oturumunu kapat</a></li>
                </ul>
