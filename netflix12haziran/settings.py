@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-y+4!82dvu%^rjf+d1$pcj*%fg4x)9q4@ndei4i@_@um=%fv@cy'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False # burası hata mesajlarını göstermemek için
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -127,6 +127,15 @@ MEDIA_ROOT = BASE_DIR / "media"
 # MESSAGES
 from django.contrib.messages import constants as message_constants
 MESSAGE_TAGS = {message_constants.ERROR: "danger"}
+
+
+# Email Settings
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'neos5haziran@gmail.com'
+EMAIL_HOST_PASSWORD = 'atqpxadyqsibngrr'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

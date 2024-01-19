@@ -3,7 +3,42 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.contrib import messages
 from appUser.models import *
+from django.core.mail import send_mail
+from netflix12haziran.settings import EMAIL_HOST_USER
+from django.contrib.auth.decorators import login_required # decorator giriş yapmayanları kısıtla
 
+
+
+def emailmessagePage(request):
+
+   user_list = User.objects.values("email")
+   user_email_list = []
+   
+   for i in user_list:
+      user_email_list.append(i["email"])
+         
+   if request.method == "POST":
+      title = request.POST.get("title")
+      text = request.POST.get("text")
+
+      emailmessage = Emailmessage(title=title, text=text)
+      emailmessage.save() # SQL kaydını yapıyor
+      
+      for i in user_email_list:
+         send_mail(
+            title,
+            text,
+            EMAIL_HOST_USER,
+            [i],
+            fail_silently=False,
+         )
+
+      
+   
+   context = {}
+   return render(request, "emailmessage.html",context)
+
+@login_required(login_url="loginPage")
 def profilePage(request):
    context = {}
    
@@ -63,12 +98,14 @@ def profilePage(request):
    })
    return render(request, "profile.html", context)
 
+@login_required(login_url="loginPage")
 def profileDelete(request, pid):
    profile = Profile.objects.get(user=request.user,id=pid)
    profile.isview = False
    profile.save()
    return redirect("profilePage")
 
+@login_required(login_url="loginPage")
 def profileLogin(request,pid):
    profile_list = Profile.objects.filter(user=request.user) # kullanının tüm profilleri
    profile_list.update(islogin=False) # tüm listedeki islogin False olsun
@@ -79,9 +116,51 @@ def profileLogin(request,pid):
    return redirect("browseindexPage")
 
 # ============ 
-
+@login_required(login_url="loginPage")
 def hesapPage(request):
-   context = {}
+   profile = Profile.objects.get(user=request.user, islogin=True)
+   
+   if request.method == "POST":
+      submit = request.POST.get("submit")
+      
+      if submit == "emailSubmit":
+         email = request.POST.get("email")
+         password = request.POST.get("password")
+         # set_password() - check_password()
+         if request.user.check_password(password): # şifre True yada False
+            request.user.email = email
+            request.user.save()
+            return redirect("hesapPage")
+         else:
+            messages.error(request, "Şifreniz yanlış email değiştirlemedi!")
+      elif submit == "passwordSubmit":
+         password = request.POST.get("password")
+         password1 = request.POST.get("password1")
+         password2 = request.POST.get("password2")
+         if request.user.check_password(password):
+            if password1 == password2:
+               request.user.set_password(password1)
+               request.user.save()
+               return redirect("loginPage")
+            else:
+               messages.error(request, "Yeni şifreler bir biriyle uyuşmuyor!")
+         else:
+            messages.error(request, "Şifreniz yanlış şifre değiştirlemedi!")
+
+      elif submit == "telSubmit":
+         tel = request.POST.get("tel")
+         password = request.POST.get("password")
+         if request.user.check_password(password): # şifre kontrol
+            request.user.userinfo.tel = tel
+            request.user.userinfo.save()
+            return redirect("hesapPage")
+         else:
+            messages.error(request, "Şifreniz yanlış telefon değiştirlemedi!")
+   
+   
+   context = {
+      "profile":profile,
+   }
    return render(request, "hesap.html", context)
    
 def loginPage(request):
@@ -134,6 +213,10 @@ def registerPage(request):
                      # Kayıt Edilebilir.
                      user = User.objects.create_user(first_name=fname, last_name=lname, username=username, email=email, password=password1)
                      user.save()
+                     
+                     userinfo = Userinfo(user=user)
+                     userinfo.save()
+                     
                      return redirect("loginPage")
                   else:
                      messages.error(request, "Şifrenizin 8 veya daha uzun olması gerekir.")
@@ -153,3 +236,9 @@ def registerPage(request):
                   
    
    return render(request, "user/register.html", context)
+
+@login_required(login_url="loginPage")
+def logoutUser(request):
+   logout(request)
+   return redirect("loginPage")
+      

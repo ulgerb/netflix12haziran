@@ -20,6 +20,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 from appMy.views import *
 from appUser.views import *
+from django.conf.urls import handler404, handler500
+
+handler404 = error_404
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,8 +32,13 @@ urlpatterns = [
     path('profileDelete/<pid>', profileDelete, name='profileDelete'),
     path('profileLogin/<pid>', profileLogin, name='profileLogin'),
     
-    
+    # USER AUTH
     path('hesap', hesapPage, name='hesapPage'),
     path('login', loginPage, name='loginPage'),
     path('signup', registerPage, name='registerPage'),
+    path('logoutUser', logoutUser, name='logoutUser'),
+
+    # EMAIL MESSAGES
+    path('emailmessagePage', emailmessagePage, name='emailmessagePage'),
+    
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

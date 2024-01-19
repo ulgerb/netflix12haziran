@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block nonheader %}
+
+
+<div class="container">
+
+   <nav><a href="/">Netflix</a></nav>
+
+   <div class="row my-5 justify-content-center">
+      <form class="d-flex flex-column gap-3" method="POST" style="width: 500px;">
+         {% csrf_token %}
+         <input type="text" name="title" class="form-control" placeholder="Başlık">
+         <textarea name="text" placeholder="Mesaj" cols="30" rows="10" class="form-control"></textarea>
+         <button type="submit" class="btn btn-primary">Gönder</button>
+      </form>
+   </div>
+   
+</div>
+
+   
+{% endblock nonheader %}
+   
